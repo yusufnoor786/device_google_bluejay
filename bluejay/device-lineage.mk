@@ -8,6 +8,9 @@ $(call inherit-product, $(DEVICE_PATH)/device-lineage.mk)
 
 DEVICE_PACKAGE_OVERLAYS += $(DEVICE_PATH)/$(DEVICE_CODENAME)/overlay-lineage
 
+# Custom MistOS about phone properties
+TARGET_SYSTEM_PROP += $(DEVICE_PATH)/$(DEVICE_CODENAME)/custom_system.prop
+
 # Init
 PRODUCT_PACKAGES += \
     init.recovery.bluejay.touch.rc

@@ -1,0 +1,8 @@
+ro.mist.display=1080 x 2400, OLED, HDR
+ro.mist.battery=4410 mAh
+ro.mist.soc=Google Tensor
+ro.mist.camera=12MP + 12MP
+ro.mist.front=8MP
+ro.mist.platform=Google Tensor G1
+ro.mist.screen=6.1" OLED
+ro.mist.device.name=Google Pixel 6a
