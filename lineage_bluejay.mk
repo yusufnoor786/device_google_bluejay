@@ -7,11 +7,29 @@
 # Inherit some common stuff
 $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 
+#Camera
+$(call inherit-product-if-exists, vendor/google/camera/config.mk)
+
+# ViPER4Android FX
+$(call inherit-product, packages/apps/ViPER4AndroidFX/config.mk)
+
+#Face unlock 
+$(call inherit-product-if-exists, vendor/google/faceunlock/config.mk)
+
 # Inherit device configuration
 DEVICE_CODENAME := bluejay
 DEVICE_PATH := device/google/bluejay
 VENDOR_PATH := vendor/google/bluejay
 $(call inherit-product, $(DEVICE_PATH)/aosp_$(DEVICE_CODENAME).mk)
+
+MISTOS_MAINTAINER := Zabuka_Zuzu
+MIST_BUILD_TYPE := OFFICIAL
+#WITH_GMS := true
+TARGET_ENABLE_BLUR := true
+TARGET_SUPPORTS_QUICK_TAP := true
+BYPASS_CHARGE_SUPPORTED := true
+
+TARGET_HAS_UDFPS := true
 
 # Device identifier. This must come after all inclusions
 PRODUCT_BRAND := google
