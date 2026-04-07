@@ -13,6 +13,9 @@ $(call inherit-product-if-exists, vendor/google/faceunlock/config.mk)
 # Camera
 $(call inherit-product-if-exists, vendor/google/camera/config.mk)
 
+# ViPER4Android FX
+$(call inherit-product, packages/apps/ViPER4AndroidFX/config.mk)
+
 PRODUCT_ENFORCE_ARTIFACT_PATH_REQUIREMENTS := false
 
 # Inherit device configuration
@@ -25,6 +28,15 @@ $(call inherit-product, $(DEVICE_PATH)/aosp_$(DEVICE_CODENAME).mk)
 PRODUCT_BRAND := google
 PRODUCT_MODEL := Pixel 6a
 PRODUCT_NAME := lineage_$(DEVICE_CODENAME)
+
+# MistOS
+MISTOS_MAINTAINER := Zabuka_Zuzu
+MIST_BUILD_TYPE := OFFICIAL
+WITH_GMS := true
+TARGET_ENABLE_BLUR := true
+TARGET_SUPPORTS_QUICK_TAP := true
+BYPASS_CHARGE_SUPPORTED := true
+TARGET_HAS_UDFPS := true
 
 # Boot animation
 TARGET_SCREEN_HEIGHT := 2400
