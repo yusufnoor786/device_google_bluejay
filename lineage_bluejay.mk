@@ -13,6 +13,9 @@ $(call inherit-product-if-exists, vendor/google/faceunlock/config.mk)
 # Camera
 $(call inherit-product-if-exists, vendor/google/camera/config.mk)
 
+# ViPER4Android FX
+$(call inherit-product, packages/apps/ViPER4AndroidFX/config.mk)
+
 PRODUCT_ENFORCE_ARTIFACT_PATH_REQUIREMENTS := false
 
 # Inherit device configuration
@@ -26,6 +29,15 @@ PRODUCT_NAME := lineage_$(DEVICE_CODENAME)
 PRODUCT_SYSTEM_BRAND := google
 PRODUCT_SYSTEM_MANUFACTURER := Google
 PRODUCT_SYSTEM_NAME := generic_system_google
+
+# MistOS
+MISTOS_MAINTAINER := Zabuka_Zuzu
+MIST_BUILD_TYPE := OFFICIAL
+WITH_GMS := true
+TARGET_ENABLE_BLUR := true
+TARGET_SUPPORTS_QUICK_TAP := true
+BYPASS_CHARGE_SUPPORTED := true
+TARGET_HAS_UDFPS := true
 
 # Boot animation
 TARGET_SCREEN_HEIGHT := 2400
