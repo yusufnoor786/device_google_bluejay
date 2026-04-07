@@ -7,6 +7,9 @@
 # Inherit some common stuff
 $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 
+# Face unlock 
+$(call inherit-product-if-exists, vendor/google/faceunlock/config.mk)
+
 # Inherit device configuration
 DEVICE_CODENAME := bluejay
 DEVICE_PATH := device/google/bluejay
