@@ -13,6 +13,8 @@ $(call inherit-product-if-exists, vendor/google/faceunlock/config.mk)
 # Camera
 $(call inherit-product-if-exists, vendor/google/camera/config.mk)
 
+PRODUCT_ENFORCE_ARTIFACT_PATH_REQUIREMENTS := false
+
 # Inherit device configuration
 DEVICE_CODENAME := bluejay
 DEVICE_PATH := device/google/bluejay
