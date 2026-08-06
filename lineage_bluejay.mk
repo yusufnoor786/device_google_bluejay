@@ -8,7 +8,7 @@
 $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 
 # Face unlock 
-$(call inherit-product-if-exists, vendor/google/faceunlock/config.mk)
+#$(call inherit-product-if-exists, vendor/google/faceunlock/config.mk)
 
 # Camera
 $(call inherit-product-if-exists, vendor/google/camera/config.mk)
@@ -34,6 +34,7 @@ PRODUCT_SYSTEM_NAME := generic_system_google
 MISTOS_MAINTAINER := Zabuka_Zuzu
 MIST_BUILD_TYPE := OFFICIAL
 WITH_GMS := true
+TARGET_USES_MINI_GAPPS := true
 TARGET_ENABLE_BLUR := true
 TARGET_SUPPORTS_QUICK_TAP := true
 BYPASS_CHARGE_SUPPORTED := true
