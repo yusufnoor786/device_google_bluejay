@@ -75,7 +75,10 @@ done
 # 2) build kernelsu.ko in the same Bazel workspace
 log "building kernelsu.ko"
 ( cd "$KB" && tools/bazel build --config=bluejay //private/google-modules/kernelsu:kernelsu >&2 ) || die "kernelsu.ko build failed"
-KO=$(find -L "$KB/bazel-bin/private/google-modules/kernelsu" -name kernelsu.ko 2>/dev/null | head -1)
+# the stripped module is the one to patch in (the unstripped copy carries ~6 MB of debug info); do not rely on
+# find's directory order, which differs between filesystems
+KO=$KB/bazel-bin/private/google-modules/kernelsu/kernelsu/kernelsu.ko
+[ -f "$KO" ] || KO=$(find -L "$KB/bazel-bin/private/google-modules/kernelsu" -name kernelsu.ko -not -path '*/unstripped/*' -not -path '*/staging/*' 2>/dev/null | head -1)
 [ -n "$KO" ] && [ -f "$KO" ] || die "kernelsu.ko not found after build"
 
 # 3) ksud (pinned checksum)
