@@ -14,8 +14,9 @@ ksu_kernel_patch() {
     ( cd "$top" && ANDROID_BUILD_TOP="$top" device/google/bluejay/ksu-kernel/patch-kernel.sh )
 }
 
-# wrap lunch once (even if this file is sourced repeatedly)
-if [ -z "${_KSU_LUNCH_WRAPPED:-}" ] && [ "$(type -t lunch 2>/dev/null)" = function ]; then
+# Wrap lunch once. Decide from lunch's own definition, not from a variable: re-sourcing envsetup.sh in the
+# same shell redefines lunch (dropping an earlier wrapper) while shell variables survive.
+if [ "$(type -t lunch 2>/dev/null)" = function ] && ! declare -f lunch | grep -q '_ksu_orig_lunch'; then
     eval "_ksu_orig_lunch() $(declare -f lunch | tail -n +2)"
     lunch() {
         _ksu_orig_lunch "$@"
@@ -25,5 +26,4 @@ if [ -z "${_KSU_LUNCH_WRAPPED:-}" ] && [ "$(type -t lunch 2>/dev/null)" = functi
         fi
         return $rc
     }
-    _KSU_LUNCH_WRAPPED=1
 fi
