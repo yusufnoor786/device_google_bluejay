@@ -11,7 +11,7 @@ TARGET_KERNEL_DEVICE := bluejay
 TARGET_KERNEL_DIR := device/google/$(TARGET_KERNEL_DEVICE)-kernels/$(TARGET_LINUX_KERNEL_VERSION)
 TARGET_KERNEL_PLATFORM_SOURCE := google/gs-$(TARGET_LINUX_KERNEL_VERSION)
 
- KernelSU-Next kernel: download the prebuilt, KernelSU-patched kernel (built by CI) into
+# KernelSU-Next kernel: download the prebuilt, KernelSU-patched kernel (built by CI) into
 # TARGET_KERNEL_DIR at lunch/build-config time. Set KSU_KERNEL_SKIP=1 to disable.
 KSU_KERNEL_FETCH_RC := $(shell device/google/bluejay/ksu-kernel/fetch-kernel.sh $(TARGET_KERNEL_DIR) 1>&2; echo $$?)
 ifneq ($(KSU_KERNEL_FETCH_RC),0)
