@@ -1,23 +1,29 @@
-# Sourced by build/envsetup.sh (device/*/*/vendorsetup.sh), i.e. in your normal shell where curl works.
-# The Android build (soong_ui/kati) blocks curl/wget, so the kernel download happens here, not in the
-# makefiles. device-bluejay.mk then only checks that the files are present.
+# Sourced by build/envsetup.sh (device/*/*/vendorsetup.sh).
 #
-#   ksu_kernel_update            download/refresh the KernelSU-Next kernel now
-#   KSU_KERNEL_SKIP=1            do nothing        KSU_KERNEL_TAG=<tag>   pin a release
+# Lineage's `lunch` runs build_kernel: it syncs + builds the kernel in out-kernel/google/gs-6.1, WIPES
+# device/google/bluejay-kernels/6.1 and copies the unpatched build there. After lunch succeeds we run
+# ksu-kernel/patch-kernel.sh, which builds kernelsu.ko against that same kernel and patches boot.img.
+#
+#   ksu_kernel_patch     run the patch step by hand (after lunch / when the build warns it is unpatched)
+#   KSU_SKIP=1           skip patching          KSU_FORCE=1   patch again
 
-ksu_kernel_update() {
+ksu_kernel_patch() {
     local top
     top=$(gettop 2>/dev/null) || top=$PWD
-    [ -x "$top/device/google/bluejay/ksu-kernel/fetch-kernel.sh" ] || { echo "[ksu-kernel] fetch script not found under $top" >&2; return 1; }
-    ( cd "$top" && device/google/bluejay/ksu-kernel/fetch-kernel.sh device/google/bluejay-kernels/6.1 )
+    [ -x "$top/device/google/bluejay/ksu-kernel/patch-kernel.sh" ] || { echo "[ksu-kernel] patch script not found under $top" >&2; return 1; }
+    ( cd "$top" && ANDROID_BUILD_TOP="$top" device/google/bluejay/ksu-kernel/patch-kernel.sh )
 }
 
-# refresh now (envsetup time); never abort the sourcing shell
-ksu_kernel_update || echo "[ksu-kernel] WARNING: update failed, see above" >&2
-
-# refresh again on every lunch (wrapped once, even if this file is sourced repeatedly)
+# wrap lunch once (even if this file is sourced repeatedly)
 if [ -z "${_KSU_LUNCH_WRAPPED:-}" ] && [ "$(type -t lunch 2>/dev/null)" = function ]; then
     eval "_ksu_orig_lunch() $(declare -f lunch | tail -n +2)"
-    lunch() { ksu_kernel_update || true; _ksu_orig_lunch "$@"; }
+    lunch() {
+        _ksu_orig_lunch "$@"
+        local rc=$?
+        if [ $rc -eq 0 ]; then
+            ksu_kernel_patch || echo "[ksu-kernel] WARNING: patching failed, the ROM will NOT contain KernelSU-Next (run ksu_kernel_patch)" >&2
+        fi
+        return $rc
+    }
     _KSU_LUNCH_WRAPPED=1
 fi

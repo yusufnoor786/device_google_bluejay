@@ -11,11 +11,11 @@ TARGET_KERNEL_DEVICE := bluejay
 TARGET_KERNEL_DIR := device/google/$(TARGET_KERNEL_DEVICE)-kernels/$(TARGET_LINUX_KERNEL_VERSION)
 TARGET_KERNEL_PLATFORM_SOURCE := google/gs-$(TARGET_LINUX_KERNEL_VERSION)
 
-# KernelSU-Next kernel: download the prebuilt, KernelSU-patched kernel (built by CI) into
-# TARGET_KERNEL_DIR at lunch/build-config time. Set KSU_KERNEL_SKIP=1 to disable.
-KSU_KERNEL_FETCH_RC := $(shell KSU_KERNEL_OFFLINE=1 device/google/bluejay/ksu-kernel/fetch-kernel.sh $(TARGET_KERNEL_DIR) 1>&2; echo $$?)
-ifneq ($(KSU_KERNEL_FETCH_RC),0)
-$(error KernelSU kernel missing, run ksu_kernel_update or re-source build/envsetup.sh)
+# KernelSU-Next: Lineage's build_kernel (run by lunch) wipes TARGET_KERNEL_DIR and copies an unpatched kernel in.
+# ksu-kernel/patch-kernel.sh (run after lunch by vendorsetup.sh, or by hand: ksu_kernel_patch) patches boot.img.
+# Pure make, no shell: the Android build blocks curl/wget. Warn if the patch step has not run yet.
+ifeq ($(wildcard $(TARGET_KERNEL_DIR)/.ksu-kernel-release),)
+$(warning KernelSU-Next: $(TARGET_KERNEL_DIR)/boot.img is not patched yet, run ksu_kernel_patch after lunch)
 endif
 
 PRODUCT_ENFORCE_ARTIFACT_PATH_REQUIREMENTS := false
