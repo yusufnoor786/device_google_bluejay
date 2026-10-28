@@ -21,9 +21,11 @@ if [ "$(type -t lunch 2>/dev/null)" = function ] && ! declare -f lunch | grep -q
     lunch() {
         _ksu_orig_lunch "$@"
         local rc=$?
-        if [ $rc -eq 0 ]; then
-            ksu_kernel_patch || echo "[ksu-kernel] WARNING: patching failed, the ROM will NOT contain KernelSU-Next (run ksu_kernel_patch)" >&2
-        fi
+        # Patch whatever lunch's build_kernel produced, even if lunch itself returned non-zero: many ROM lunch
+        # functions end on a command whose status is not 0 although everything worked. patch-kernel.sh is a
+        # no-op when boot.img is already patched, so running it after a failed lunch is harmless.
+        echo "[ksu-kernel] lunch finished (exit $rc), checking the KernelSU-Next patch..." >&2
+        ksu_kernel_patch || echo "[ksu-kernel] WARNING: patching failed, the ROM will NOT contain KernelSU-Next (run ksu_kernel_patch)" >&2
         return $rc
     }
 fi
